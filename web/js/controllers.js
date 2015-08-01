@@ -17,22 +17,43 @@ function AddressController($scope, Address) {
         var key = {};
         var value = {street: $scope.street, city: $scope.city, state: $scope.state}
 
-        Address.save(key, value, function (data) {
-            $scope.addresses.push(data);
-            resetForm();
-        });
+        /**
+         * @todo    need to improve validation
+         */
+
+        //var streetValid = angular.bind('myForm.street.$valid');
+
+        if ($scope.street && $scope.city && $scope.state) {
+
+            Address.save(key, value, function (data) {
+                $scope.addresses.push(data);
+                resetForm();
+            });
+
+        }
     };
 
     $scope.update = function () {
         var key = {id: currentResource.id};
         var value = {street: $scope.street, city: $scope.city, state: $scope.state}
-        Address.save(key, value, function (data) {
-            currentResource.street = data.street;
-            currentResource.city = data.city;
-            currentResource.state = data.state;
-            currentResource.postalcode = data.postalcode;
-            resetForm();
-        });
+
+        /**
+         * @todo    need to improve validation
+         */
+
+        //var streetValid = angular.bind('myForm.street.$valid');
+
+        if ($scope.street && $scope.city && $scope.state) {
+
+            Address.save(key, value, function (data) {
+                currentResource.street = data.street;
+                currentResource.city = data.city;
+                currentResource.state = data.state;
+                currentResource.postalcode = data.postalcode;
+                resetForm();
+            });
+
+        }
     }
 
     $scope.refresh = function () {
