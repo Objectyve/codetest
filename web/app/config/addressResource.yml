@@ -1,0 +1,24 @@
+getAll:
+  path: /resource
+  defaults: { _controller: 'Controller\AddressController::getAllAction' }
+  methods:  [GET]
+
+getOne:
+  path: /resource/{id}
+  defaults: { _controller: 'Controller\AddressController::getOneAction' }
+  methods:  [GET]
+
+deleteOne:
+  path: /resource/{id}
+  defaults: { _controller: 'Controller\AddressController::deleteOneAction' }
+  methods:  [DELETE]
+
+addOne:
+  path: /resource
+  defaults: { _controller: 'Controller\AddressController::addOneAction' }
+  methods:  [POST]
+
+editOne:
+  path: /resource/{id}
+  defaults: { _controller: 'Controller\AddressController::editOneAction' }
+  methods:  [POST]

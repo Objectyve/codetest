@@ -1,0 +1,11 @@
+RewriteEngine on
+
+RewriteBase /
+#RewriteRule ^(.*)landing(.*)$ http://codetest.objectyve.com/$1landing$2 [L,R=301]
+#RewriteRule ^(.*)landing_config(.*)$ http://www.codetest.objectyve.com/$1landing_config$2 [L,R=301]
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>

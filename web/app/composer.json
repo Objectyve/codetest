@@ -1,0 +1,22 @@
+{
+    "name": "codetest",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Jamie Lara",
+            "email": "jamie@jalara.com"
+        }
+    ],
+    "require": {
+        "silex/silex": "1.3.*@dev",
+        "doctrine/dbal": "2.3.4",
+        "symfony/yaml":"v2.2.0",
+        "symfony/config":"v2.2.0",
+        "geocoder-php/geocoder-service-provider":"@stable"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "lib/"
+        }
+    }
+}

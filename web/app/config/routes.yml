@@ -1,0 +1,3 @@
+addresses:
+  prefix: /address
+  resource: addressResource.yml
