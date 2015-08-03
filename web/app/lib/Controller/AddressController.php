@@ -5,6 +5,11 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+use Geocoder\Exception\NoResultException;
+use Geocoder\Exception\QuotaExceededException;
+use Geocoder\Exception\Exception;
+
+
 class AddressController
 {
     public function getAllAction(Application $app)
@@ -29,7 +34,21 @@ class AddressController
 
         $geocoder = $app['geocoder'];
 
-        $result   = $geocoder->geocode($payload->street.",".$payload->city.",".$payload->state);
+        $process = true;
+
+        try {
+            $result   = $geocoder->geocode($payload->street.",".$payload->city.",".$payload->state);
+        } catch (\Geocoder\Exception\NoResultException $e) {
+            $result = "No result was returned by the geocoder, the address appears to be malformed";
+            //print_r($result); die();
+            $process = false;
+        } catch (\Geocoder\Exception\QuotaExceededException $e) {
+            $result = "We met our daily quota";
+            $process = false;
+        } catch (Exception $e) {
+            $result = "Error: " . $e->getMessage();
+            $process = false;
+        }
 
         /*
         echo "Street: " . $result->getStreetNumber() . " ".$result->getStreetName()."\n";
@@ -42,17 +61,23 @@ class AddressController
 
         // AIzaSyBzM7VfVA8uhFxLnVDlwpUFJzaJBhLEtn0
 
-        $newResource = [
-            'id'      => (integer)$app['db']
-                    ->fetchColumn("SELECT max(id) FROM address") + 1,
-            'street'  => $result->getStreetNumber() . " ".$result->getStreetName(),
-            'city' => $result->getCity(),
-            'state' => $result->getRegion(),
-            'postalcode' => $result->getZipCode(),
-        ];
+        if ($process) {
+            $newResource = [
+                'id'      => (integer)$app['db']
+                        ->fetchColumn("SELECT max(id) FROM address") + 1,
+                'street'  => $result->getStreetNumber() . " ".$result->getStreetName(),
+                'city' => $result->getCity(),
+                'state' => $result->getRegion(),
+                'postalcode' => $result->getZipCode(),
+            ];
 
-        $app['db']->insert('address', $newResource);
+            $app['db']->insert('address', $newResource);
 
+        } else {
+            $newResource = [
+                'error' => $result
+            ];
+        }
         return new JsonResponse($newResource);
     }
 
@@ -62,16 +87,36 @@ class AddressController
 
         $geocoder = $app['geocoder'];
 
-        $result   = $geocoder->geocode($payload->street.",".$payload->city.",".$payload->state);
+        $process = true;
 
-        $resource = [
-            'street'  => $result->getStreetNumber() . " ".$result->getStreetName(),
+        try {
+            $result   = $geocoder->geocode($payload->street.",".$payload->city.",".$payload->state);
+        } catch (\Geocoder\Exception\NoResultException $e) {
+            $result = "No result was returned by the geocoder, the address appears to be malformed";
+            //print_r($result); die();
+            $process = false;
+        } catch (\Geocoder\Exception\QuotaExceededException $e) {
+            $result = "We met our daily quota";
+            $process = false;
+        } catch (Exception $e) {
+            $result = "Error: " . $e->getMessage();
+            $process = false;
+        }
+
+        if ($process) {
+            $resource = [
+                'street'  => $result->getStreetNumber() . " ".$result->getStreetName(),
                 'city' => $result->getCity(),
                 'state' => $result->getRegion(),
                 'postalcode' => $result->getZipCode(),
-        ];
+            ];
 
-        $app['db']->update('address', $resource, ['id' => $id]);
+            $app['db']->update('address', $resource, ['id' => $id]);
+        } else {
+            $resource = [
+                'error' => $result
+            ];
+        }
 
         return new JsonResponse($resource);
     }

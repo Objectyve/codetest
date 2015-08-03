@@ -12,7 +12,7 @@
         "doctrine/dbal": "2.3.4",
         "symfony/yaml":"v2.2.0",
         "symfony/config":"v2.2.0",
-        "geocoder-php/geocoder-service-provider":"@stable"
+        "geocoder-php/geocoder-service-provider":"@stable",
     },
     "autoload": {
         "psr-0": {

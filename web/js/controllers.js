@@ -26,8 +26,14 @@ function AddressController($scope, Address) {
         if ($scope.street && $scope.city && $scope.state) {
 
             Address.save(key, value, function (data) {
-                $scope.addresses.push(data);
-                resetForm();
+
+                if (data.error) {
+                    alert(data.error)
+                } else {
+                    $scope.addresses.push(data);
+                    resetForm();
+                }
+
             });
 
         }
@@ -46,11 +52,17 @@ function AddressController($scope, Address) {
         if ($scope.street && $scope.city && $scope.state) {
 
             Address.save(key, value, function (data) {
-                currentResource.street = data.street;
-                currentResource.city = data.city;
-                currentResource.state = data.state;
-                currentResource.postalcode = data.postalcode;
-                resetForm();
+
+                if (data.error) {
+                    alert(data.error)
+                } else {
+                    currentResource.street = data.street;
+                    currentResource.city = data.city;
+                    currentResource.state = data.state;
+                    currentResource.postalcode = data.postalcode;
+                    resetForm();
+                }
+
             });
 
         }
